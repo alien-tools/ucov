@@ -36,6 +36,20 @@ UCov outputs a set of report files:
 - The syntactic usage model (SUM) of the Java library (list of all possible uses permitted by the library) exported as a CSV file ```.SUM.csv```
 - The syntactic usage footprint (SUF) of a client using the Java library (list of all uses made by the client out of the API) exported as a CSV file ```.SUF.csv```
 
+For the SUM and SUF reports, here's a sample SUF result extract from the analysis of the Spark 2.9.3 Library (the SUM report follows the same format):
+
+| projectId | projectType | projectLocation | usagePosition | usageEndPosition | usageFullyQualifiedName | usageKind | usageType |
+|-----------|-------------|-----------------|---------------|------------------|-------------------------|-----------|-----------| 
+| Spark-2.9.3 | SAMPLE | I:/UCov/Repro/spark/Samples | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(16:23) | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(79:1)   | spark.Route                                      | SYMBOL_KIND_INTERFACE | SYMBOL_USE_IMPLEMENTATION |
+| Spark-2.9.3 | SAMPLE | I:/UCov/Repro/spark/Samples | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(16:97) | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(16:101) | spark.Route                                      | SYMBOL_KIND_TYPE      | SYMBOL_USE_TYPE_REFERENCE |
+| Spark-2.9.3 | SAMPLE | I:/UCov/Repro/spark/Samples | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(28:45) | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(28:51)  | spark.Request                                    | SYMBOL_KIND_TYPE      | SYMBOL_USE_TYPE_REFERENCE |
+| Spark-2.9.3 | SAMPLE | I:/UCov/Repro/spark/Samples | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(29:25) | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(29:49)  | spark.Request.headers(java.lang.String)          | SYMBOL_KIND_METHOD    | SYMBOL_USE_INVOCATION     |
+| Spark-2.9.3 | SAMPLE | I:/UCov/Repro/spark/Samples | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(55:19) | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(77:5)   | spark.Route.handle(spark.Request,spark.Response) | SYMBOL_KIND_METHOD    | SYMBOL_USE_OVERRIDING     |
+| Spark-2.9.3 | SAMPLE | I:/UCov/Repro/spark/Samples | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(55:26) | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(55:32)  | spark.Request                                    | SYMBOL_KIND_TYPE      | SYMBOL_USE_TYPE_REFERENCE |
+| Spark-2.9.3 | SAMPLE | I:/UCov/Repro/spark/Samples | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(55:43) | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(55:50)  | spark.Response                                   | SYMBOL_KIND_TYPE      | SYMBOL_USE_TYPE_REFERENCE |
+| Spark-2.9.3 | SAMPLE | I:/UCov/Repro/spark/Samples | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(60:48) | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(60:61)  | spark.Request.body()                             | SYMBOL_KIND_METHOD    | SYMBOL_USE_INVOCATION     |
+| Spark-2.9.3 | SAMPLE | I:/UCov/Repro/spark/Samples | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(62:45) | /blogservice_sparkexample/src/main/java/me/tomassetti/abstractrequesthandler.java(62:60)  | spark.Request.params()                           | SYMBOL_KIND_METHOD    | SYMBOL_USE_INVOCATION     |
+
 ## License
 
 This repository is licensed under the [MIT License](LICENSE).
