@@ -42,7 +42,9 @@ This repository is licensed under the [MIT License](LICENSE.md).
 
 This repository makes use of a third party dependency named [Roseau](https://github.com/alien-tools/roseau) also made available under the MIT license and whose license is reproduced below:
 
-<spoiler>
+<details>
+  <summary>Roseau License Terms</summary>
+  <p>
 MIT License
 
 Copyright (c) 2023 Roseau
@@ -64,4 +66,5 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+    </p>
 </spoiler>
