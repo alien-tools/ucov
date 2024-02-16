@@ -1,23 +1,18 @@
 package com.github.ucov.models;
 
+import com.github.maracas.roseau.api.model.SourceLocation;
+
 import java.nio.file.Path;
 import java.util.Objects;
 
 public record Usage(String projectId, String projectType, String fullyQualifiedName, SymbolKind usageKind,
-                    SymbolUse usageType, UsagePosition usagePosition,
+                    SymbolUse usageType, SourceLocation usagePosition,
                     Path projectLocation) implements Comparable<Usage> {
 
     public String toCSVRowString() {
         String SEPARATOR = "|";
 
-        return projectId + SEPARATOR +
-                projectType + SEPARATOR +
-                projectLocation.toAbsolutePath().toString().replace('\\', '/') + SEPARATOR +
-                usagePosition.getPositionAsString(projectLocation) + SEPARATOR +
-                usagePosition.getEndPositionAsString(projectLocation) + SEPARATOR +
-                fullyQualifiedName + SEPARATOR +
-                usageKind + SEPARATOR +
-                usageType;
+        return STR."\{projectId}\{SEPARATOR}\{projectType}\{SEPARATOR}\{projectLocation.toAbsolutePath().toString().replace('\\', '/')}\{SEPARATOR}\{usagePosition.file().toString().toLowerCase().replace(projectLocation.toAbsolutePath().toString().toLowerCase(), "").replace('\\', '/')}(\{usagePosition.line()})\{SEPARATOR}\{fullyQualifiedName}\{SEPARATOR}\{usageKind}\{SEPARATOR}\{usageType}";
     }
 
     @Override

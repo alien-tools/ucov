@@ -1,7 +1,7 @@
 package com.github.ucov;
 
-import com.github.maracas.roseau.APIExtractor;
-import com.github.maracas.roseau.model.API;
+import com.github.maracas.roseau.api.SpoonAPIExtractor;
+import com.github.maracas.roseau.api.model.API;
 import com.github.ucov.spoon.SpoonCodeDirectoryFilter;
 import com.github.ucov.spoon.SpoonLauncherUtilities;
 import spoon.Launcher;
@@ -61,7 +61,7 @@ public class UCovLibraryProject {
             Main.UCOV_LOGGER.info("Fetching API models...");
 
             // API model for libraries
-            cachedAPI = APIExtractor.getAPIFromCtModel(getExternalReferencesModel());
+            cachedAPI = new SpoonAPIExtractor(getExternalReferencesModel()).extractAPI();
         }
 
         return cachedAPI;

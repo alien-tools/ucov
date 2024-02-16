@@ -14,7 +14,7 @@ import spoon.reflect.reference.CtTypeReference;
 
 public class SpoonFullyQualifiedNameExtractor {
     public static String getFullyQualifiedName(CtField<?> ctField) {
-        return getFullyQualifiedName(ctField.getDeclaringType()) + "." + ctField.getSimpleName();
+        return STR."\{getFullyQualifiedName(ctField.getDeclaringType())}.\{ctField.getSimpleName()}";
     }
 
     public static String getFullyQualifiedName(CtInvocation<?> ctInvocation) {
@@ -30,7 +30,7 @@ public class SpoonFullyQualifiedNameExtractor {
             return ctExecutableReference.getSignature();
         } else {
             CtTypeReference<?> typeReference = ctExecutableReference.getDeclaringType();
-            return typeReference.getQualifiedName() + "." + ctExecutableReference.getSignature();
+            return STR."\{typeReference.getQualifiedName()}.\{ctExecutableReference.getSignature()}";
         }
     }
 
@@ -52,7 +52,7 @@ public class SpoonFullyQualifiedNameExtractor {
 
     public static String getFullyQualifiedName(CtMethod<?> ctMethod) {
         CtType<?> declaringType = ctMethod.getDeclaringType();
-        return declaringType.getQualifiedName() + "." + ctMethod.getSignature();
+        return STR."\{declaringType.getQualifiedName()}.\{ctMethod.getSignature()}";
     }
 
     public static String getFullyQualifiedName(CtConstructor<?> ctConstructor) {

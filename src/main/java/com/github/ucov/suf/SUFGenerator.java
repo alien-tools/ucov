@@ -1,6 +1,6 @@
 package com.github.ucov.suf;
 
-import com.github.maracas.roseau.model.API;
+import com.github.maracas.roseau.api.model.API;
 import com.github.ucov.CodeType;
 import com.github.ucov.Main;
 import com.github.ucov.UCovLibraryClientsProject;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class SUFGenerator {
     private static List<Usage> Analyse(API mainProjectApiModel, UCovLibraryProject uCovLibraryProject, Project clientProject) {
-        Main.UCOV_LOGGER.info("Processing " + clientProject);
+        Main.UCOV_LOGGER.info(STR."Processing \{clientProject}");
 
         UCovLibraryClientsProject internalProject = new UCovLibraryClientsProject();
         Path projectLocation = clientProject.location();

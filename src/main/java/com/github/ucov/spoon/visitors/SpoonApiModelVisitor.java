@@ -1,11 +1,11 @@
 package com.github.ucov.spoon.visitors;
 
-import com.github.maracas.roseau.model.*;
+import com.github.maracas.roseau.api.model.*;
 import com.github.ucov.models.SymbolKind;
 import com.github.ucov.models.SymbolUse;
 import com.github.ucov.models.Usage;
-import com.github.ucov.models.UsagePosition;
 import spoon.reflect.code.*;
+import spoon.reflect.cu.SourcePosition;
 import spoon.reflect.declaration.*;
 import spoon.reflect.reference.CtExecutableReference;
 import spoon.reflect.reference.CtTypeReference;
@@ -33,6 +33,14 @@ public class SpoonApiModelVisitor extends CtScanner {
         this.projectLocation = projectLocation;
     }
 
+    private SourceLocation convertSpoonPosition(SourcePosition position) {
+        return position.isValidPosition()
+                ? new SourceLocation(
+                position.getFile() != null ? position.getFile().toPath() : null,
+                position.getLine())
+                : SourceLocation.NO_LOCATION;
+    }
+
     @Override
     public <T> void visitCtInvocation(CtInvocation<T> invocation) {
         super.visitCtInvocation(invocation);
@@ -47,7 +55,7 @@ public class SpoonApiModelVisitor extends CtScanner {
 
         CtExecutableReference<T> executable = invocation.getExecutable();
         String fullyQualifiedName = SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(invocation);
-        UsagePosition position = UsagePosition.getFromSourcePosition(invocation.getPosition());
+        SourceLocation position = convertSpoonPosition(invocation.getPosition());
 
         Collection<CtMethod<?>> topDefinitions = null;
 
@@ -55,15 +63,15 @@ public class SpoonApiModelVisitor extends CtScanner {
             topDefinitions = ctMethod.getTopDefinitions();
         }
 
-        for (TypeDeclaration apiType : api.getallTheTypes()) {
-            for (MethodDeclaration method : apiType.getMethods()) {
-                if (method.getFullyQualifiedName().equals(fullyQualifiedName)) {
-                    if (!method.getModifiers().contains(NonAccessModifiers.ABSTRACT)) {
-                        boolean isStatic = method.getModifiers().contains(NonAccessModifiers.STATIC);
+        for (TypeDecl apiType : api.getExportedTypes()) {
+            for (MethodDecl method : apiType.getMethods()) {
+                if (method.getQualifiedName().equals(fullyQualifiedName)) {
+                    if (!method.getModifiers().contains(Modifier.ABSTRACT)) {
+                        boolean isStatic = method.getModifiers().contains(Modifier.STATIC);
                         Usage usageModel = new Usage(
                                 projectId,
                                 projectType,
-                                method.getFullyQualifiedName(),
+                                method.getQualifiedName(),
                                 SymbolKind.SYMBOL_KIND_METHOD,
                                 isStatic ? SymbolUse.SYMBOL_USE_STATIC_INVOCATION : SymbolUse.SYMBOL_USE_INVOCATION,
                                 position,
@@ -76,7 +84,7 @@ public class SpoonApiModelVisitor extends CtScanner {
                         Usage usageModel = new Usage(
                                 projectId,
                                 projectType,
-                                method.getFullyQualifiedName(),
+                                method.getQualifiedName(),
                                 SymbolKind.SYMBOL_KIND_METHOD,
                                 SymbolUse.SYMBOL_USE_VIRTUAL_INVOCATION,
                                 position,
@@ -91,12 +99,12 @@ public class SpoonApiModelVisitor extends CtScanner {
                 if (topDefinitions != null) {
                     for (CtMethod<?> topMethod : topDefinitions) {
                         CtType<?> declaringType = topMethod.getDeclaringType();
-                        String mFQN = declaringType.getQualifiedName() + "." + topMethod.getSignature();
-                        if (method.getFullyQualifiedName().equals(mFQN)) {
+                        String mFQN = STR."\{declaringType.getQualifiedName()}.\{topMethod.getSignature()}";
+                        if (method.getQualifiedName().equals(mFQN)) {
                             Usage usageModel = new Usage(
                                     projectId,
                                     projectType,
-                                    method.getFullyQualifiedName(),
+                                    method.getQualifiedName(),
                                     SymbolKind.SYMBOL_KIND_METHOD,
                                     SymbolUse.SYMBOL_USE_VIRTUAL_INVOCATION,
                                     position,
@@ -122,11 +130,11 @@ public class SpoonApiModelVisitor extends CtScanner {
         }
 
         String fullyQualifiedName = SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(fieldRead);
-        UsagePosition position = UsagePosition.getFromSourcePosition(fieldRead.getPosition());
+        SourceLocation position = convertSpoonPosition(fieldRead.getPosition());
 
-        for (TypeDeclaration apiType : api.getallTheTypes()) {
-            for (FieldDeclaration field : apiType.getFields()) {
-                if (field.getFullyQualifiedName().equals(fullyQualifiedName)) {
+        for (TypeDecl apiType : api.getExportedTypes()) {
+            for (FieldDecl field : apiType.getFields()) {
+                if (field.getQualifiedName().equals(fullyQualifiedName)) {
                     Usage usageModel = new Usage(
                             projectId,
                             projectType,
@@ -154,11 +162,11 @@ public class SpoonApiModelVisitor extends CtScanner {
         }
 
         String fullyQualifiedName = SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(fieldWrite);
-        UsagePosition position = UsagePosition.getFromSourcePosition(fieldWrite.getPosition());
+        SourceLocation position = convertSpoonPosition(fieldWrite.getPosition());
 
-        for (TypeDeclaration apiType : api.getallTheTypes()) {
-            for (FieldDeclaration field : apiType.getFields()) {
-                if (field.getFullyQualifiedName().equals(fullyQualifiedName)) {
+        for (TypeDecl apiType : api.getExportedTypes()) {
+            for (FieldDecl field : apiType.getFields()) {
+                if (field.getQualifiedName().equals(fullyQualifiedName)) {
                     Usage usageModel = new Usage(
                             projectId,
                             projectType,
@@ -190,11 +198,11 @@ public class SpoonApiModelVisitor extends CtScanner {
         }
 
         String fullyQualifiedName = SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(ctConstructorCall);
-        UsagePosition position = UsagePosition.getFromSourcePosition(ctConstructorCall.getPosition());
+        SourceLocation position = convertSpoonPosition(ctConstructorCall.getPosition());
 
-        for (TypeDeclaration apiType : api.getallTheTypes()) {
-            for (ConstructorDeclaration constructor : apiType.getConstructors()) {
-                if (constructor.getFullyQualifiedName().equals(fullyQualifiedName)) {
+        for (ClassDecl apiType : api.getExportedClasses()) {
+            for (ConstructorDecl constructor : apiType.getConstructors()) {
+                if (constructor.getQualifiedName().equals(fullyQualifiedName)) {
                     Usage usageModel = new Usage(
                             projectId,
                             projectType,
@@ -235,10 +243,10 @@ public class SpoonApiModelVisitor extends CtScanner {
 
         String fullyQualifiedName = SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(reference);
 
-        UsagePosition position = UsagePosition.getFromSourcePosition(reference.getPosition());
+        SourceLocation position = convertSpoonPosition(reference.getPosition());
 
-        for (TypeDeclaration apiType : api.getallTheTypes()) {
-            if (apiType.getFullyQualifiedName().equals(fullyQualifiedName)) {
+        for (TypeDecl apiType : api.getExportedTypes()) {
+            if (apiType.getQualifiedName().equals(fullyQualifiedName)) {
                 Usage usageModel = new Usage(
                         projectId,
                         projectType,
@@ -264,12 +272,12 @@ public class SpoonApiModelVisitor extends CtScanner {
             return;
         }
 
-        UsagePosition position = UsagePosition.getFromSourcePosition(ctClass.getPosition());
+        SourceLocation position = convertSpoonPosition(ctClass.getPosition());
 
         for (CtTypeReference<?> superInterface : ctClass.getSuperInterfaces()) {
             String fullyQualifiedName = SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(superInterface);
-            for (TypeDeclaration apiType : api.getallTheTypes()) {
-                if (apiType.getFullyQualifiedName().equals(fullyQualifiedName)) {
+            for (TypeDecl apiType : api.getExportedTypes()) {
+                if (apiType.getQualifiedName().equals(fullyQualifiedName)) {
                     Usage usageModel = new Usage(
                             projectId,
                             projectType,
@@ -290,8 +298,8 @@ public class SpoonApiModelVisitor extends CtScanner {
         CtTypeReference<?> superClass = ctClass.getSuperclass();
         if (superClass != null) {
             String fullyQualifiedName = SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(superClass);
-            for (TypeDeclaration apiType : api.getallTheTypes()) {
-                if (apiType.getFullyQualifiedName().equals(fullyQualifiedName)) {
+            for (TypeDecl apiType : api.getExportedTypes()) {
+                if (apiType.getQualifiedName().equals(fullyQualifiedName)) {
                     Usage usageModel = new Usage(
                             projectId,
                             projectType,
@@ -318,13 +326,13 @@ public class SpoonApiModelVisitor extends CtScanner {
             return;
         }
 
-        UsagePosition position = UsagePosition.getFromSourcePosition(intrface.getPosition());
+        SourceLocation position = convertSpoonPosition(intrface.getPosition());
 
         for (CtTypeReference<?> superInterface : intrface.getSuperInterfaces()) {
             String fullyQualifiedName = SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(superInterface);
 
-            for (TypeDeclaration apiType : api.getallTheTypes()) {
-                if (apiType.getFullyQualifiedName().equals(fullyQualifiedName)) {
+            for (TypeDecl apiType : api.getExportedTypes()) {
+                if (apiType.getQualifiedName().equals(fullyQualifiedName)) {
                     Usage usageModel = new Usage(
                             projectId,
                             projectType,
@@ -351,18 +359,18 @@ public class SpoonApiModelVisitor extends CtScanner {
             return;
         }
 
-        UsagePosition position = UsagePosition.getFromSourcePosition(method.getPosition());
+        SourceLocation position = convertSpoonPosition(method.getPosition());
 
         // To optimize, we should start by fetching all methods from the API
         // that *could* be overridden in client code; and then build the
         // top definition list only for those methods that have a matching name
 
         Collection<CtMethod<?>> topDefinitions = method.getTopDefinitions();
-        for (TypeDeclaration apiType : api.getallTheTypes()) {
-            for (MethodDeclaration m : apiType.getMethods()) {
+        for (TypeDecl apiType : api.getExportedTypes()) {
+            for (MethodDecl m : apiType.getMethods()) {
                 for (CtMethod<?> topMethod : topDefinitions) {
                     String fullyQualifiedName = SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(topMethod);
-                    if (m.getFullyQualifiedName().equals(fullyQualifiedName)) {
+                    if (m.getQualifiedName().equals(fullyQualifiedName)) {
                         Usage usageModel = new Usage(
                                 projectId,
                                 projectType,
@@ -397,9 +405,9 @@ public class SpoonApiModelVisitor extends CtScanner {
         }
 
         CtType<?> declaringType = overriddenMethod.getDeclaringType();
-        UsagePosition position = UsagePosition.getFromSourcePosition(lambda.getPosition());
-        for (TypeDeclaration apiType : api.getallTheTypes()) {
-            if (apiType.getFullyQualifiedName().equals(SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(declaringType))) {
+        SourceLocation position = convertSpoonPosition(lambda.getPosition());
+        for (TypeDecl apiType : api.getExportedTypes()) {
+            if (apiType.getQualifiedName().equals(SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(declaringType))) {
                 Usage usageModel = new Usage(
                         projectId,
                         projectType,
@@ -418,9 +426,9 @@ public class SpoonApiModelVisitor extends CtScanner {
 
         // (ii) They override a method from the interface they implement
         String methodFqn = SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(overriddenMethod);
-        for (TypeDeclaration apiType : api.getallTheTypes()) {
-            for (MethodDeclaration method : apiType.getMethods()) {
-                if (method.getFullyQualifiedName().equals(methodFqn)) {
+        for (TypeDecl apiType : api.getExportedTypes()) {
+            for (MethodDecl method : apiType.getMethods()) {
+                if (method.getQualifiedName().equals(methodFqn)) {
                     Usage usageModel = new Usage(
                             projectId,
                             projectType,
@@ -440,12 +448,12 @@ public class SpoonApiModelVisitor extends CtScanner {
 
         // TODO: do we want to also retrieve and mark uses for the top definitions?
         // Collection<CtMethod<?>> topDefinitions = overriddenMethod.getTopDefinitions();
-        /*for (TypeDeclaration apiType : api.getAllTheTypes()) {
-            for (MethodDeclaration m : apiType.getMethods()) {
+        /*for (TypeDecl apiType : api.getExportedTypes()) {
+            for (MethodDecl m : apiType.getMethods()) {
                 for (CtMethod<?> topMethod : topDefinitions) {
                     CtType<?> topMethodDeclaringType = topMethod.getDeclaringType();
                     String fullyQualifiedName = SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(topMethod);
-                    if (m.getFullyQualifiedName().equals(fullyQualifiedName)) {
+                    if (m.getQualifiedName().equals(fullyQualifiedName)) {
                         Usage usageModel = new Usage(
                                 projectId,
                                 projectType,
@@ -455,7 +463,9 @@ public class SpoonApiModelVisitor extends CtScanner {
                                 position,
                                 projectLocation
                         );
-                        usageModelCollection.add(usageModel);
+                        if (!usageModelCollection.contains(usageModel)) {
+                            usageModelCollection.add(usageModel);
+                        }
                     }
                 }
             }

@@ -27,10 +27,10 @@ public record UsagePosition(String path, int line, int column, int endLine, int 
     }
 
     public String getPositionAsString(Path projectLocation) {
-        return path().toLowerCase().replace(projectLocation.toAbsolutePath().toString().toLowerCase(), "").replace('\\', '/') + "(" + line() + ":" + column() + ")";
+        return STR."\{path().toLowerCase().replace(projectLocation.toAbsolutePath().toString().toLowerCase(), "").replace('\\', '/')}(\{line()}:\{column()})";
     }
 
     public String getEndPositionAsString(Path projectLocation) {
-        return path().toLowerCase().replace(projectLocation.toAbsolutePath().toString().toLowerCase(), "").replace('\\', '/') + "(" + endLine() + ":" + endColumn() + ")";
+        return STR."\{path().toLowerCase().replace(projectLocation.toAbsolutePath().toString().toLowerCase(), "").replace('\\', '/')}(\{endLine()}:\{endColumn()})";
     }
 }

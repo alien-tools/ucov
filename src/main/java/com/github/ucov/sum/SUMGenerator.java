@@ -1,6 +1,6 @@
 package com.github.ucov.sum;
 
-import com.github.maracas.roseau.model.*;
+import com.github.maracas.roseau.api.model.*;
 import com.github.ucov.models.Project;
 import com.github.ucov.models.SymbolKind;
 import com.github.ucov.models.SymbolUse;
@@ -17,28 +17,28 @@ public class SUMGenerator {
 
         ArrayList<Usage> usageModelCollection = new ArrayList<>();
 
-        for (TypeDeclaration apiType : mainProjectApiModel.getallTheTypes()) {
+        for (TypeDecl apiType : mainProjectApiModel.getExportedTypes()) {
             Usage usage = new Usage(
                     projectId,
                     projectType,
-                    apiType.getFullyQualifiedName(),
+                    apiType.getQualifiedName(),
                     SymbolKind.SYMBOL_KIND_TYPE,
                     SymbolUse.SYMBOL_USE_TYPE_REFERENCE,
-                    apiType.getPosition(),
+                    apiType.getLocation(),
                     projectLocation
             );
             if (!usageModelCollection.contains(usage)) {
                 usageModelCollection.add(usage);
             }
 
-            if (apiType.getTypeType() == TypeType.INTERFACE) {
+            if (apiType.isInterface()) {
                 usage = new Usage(
                         projectId,
                         projectType,
-                        apiType.getFullyQualifiedName(),
+                        apiType.getQualifiedName(),
                         SymbolKind.SYMBOL_KIND_INTERFACE,
                         SymbolUse.SYMBOL_USE_EXTENSION,
-                        apiType.getPosition(),
+                        apiType.getLocation(),
                         projectLocation
                 );
                 if (!usageModelCollection.contains(usage)) {
@@ -48,10 +48,10 @@ public class SUMGenerator {
                 usage = new Usage(
                         projectId,
                         projectType,
-                        apiType.getFullyQualifiedName(),
+                        apiType.getQualifiedName(),
                         SymbolKind.SYMBOL_KIND_INTERFACE,
                         SymbolUse.SYMBOL_USE_IMPLEMENTATION,
-                        apiType.getPosition(),
+                        apiType.getLocation(),
                         projectLocation
                 );
                 if (!usageModelCollection.contains(usage)) {
@@ -59,15 +59,15 @@ public class SUMGenerator {
                 }
             }
 
-            if (apiType.getTypeType() == TypeType.CLASS &&
-                    !apiType.getModifiers().contains(NonAccessModifiers.FINAL)) {
+            if (apiType.isClass() &&
+                    !apiType.getModifiers().contains(Modifier.FINAL)) {
                 usage = new Usage(
                         projectId,
                         projectType,
-                        apiType.getFullyQualifiedName(),
+                        apiType.getQualifiedName(),
                         SymbolKind.SYMBOL_KIND_CLASS,
                         SymbolUse.SYMBOL_USE_INHERITANCE,
-                        apiType.getPosition(),
+                        apiType.getLocation(),
                         projectLocation
                 );
                 if (!usageModelCollection.contains(usage)) {
@@ -75,46 +75,48 @@ public class SUMGenerator {
                 }
             }
 
-            for (ConstructorDeclaration constructor : apiType.getConstructors()) {
-                usage = new Usage(
-                        projectId,
-                        projectType,
-                        constructor.getFullyQualifiedName(),
-                        SymbolKind.SYMBOL_KIND_CONSTRUCTOR,
-                        SymbolUse.SYMBOL_USE_INVOCATION,
-                        constructor.getPosition(),
-                        projectLocation
-                );
-                if (!usageModelCollection.contains(usage)) {
-                    usageModelCollection.add(usage);
-                }
-
-                if (!apiType.getModifiers().contains(NonAccessModifiers.ABSTRACT)) {
+            if (apiType.isClass()) {
+                for (ConstructorDecl constructor : ((ClassDecl) apiType).getConstructors()) {
                     usage = new Usage(
                             projectId,
                             projectType,
-                            apiType.getFullyQualifiedName(),
-                            SymbolKind.SYMBOL_KIND_CLASS,
-                            SymbolUse.SYMBOL_USE_INSTANTIATION,
-                            apiType.getPosition(),
+                            constructor.getQualifiedName(),
+                            SymbolKind.SYMBOL_KIND_CONSTRUCTOR,
+                            SymbolUse.SYMBOL_USE_INVOCATION,
+                            constructor.getLocation(),
                             projectLocation
                     );
                     if (!usageModelCollection.contains(usage)) {
                         usageModelCollection.add(usage);
                     }
+
+                    if (!apiType.getModifiers().contains(Modifier.ABSTRACT)) {
+                        usage = new Usage(
+                                projectId,
+                                projectType,
+                                apiType.getQualifiedName(),
+                                SymbolKind.SYMBOL_KIND_CLASS,
+                                SymbolUse.SYMBOL_USE_INSTANTIATION,
+                                apiType.getLocation(),
+                                projectLocation
+                        );
+                        if (!usageModelCollection.contains(usage)) {
+                            usageModelCollection.add(usage);
+                        }
+                    }
                 }
             }
 
-            for (MethodDeclaration method : apiType.getMethods()) {
-                if (!method.getModifiers().contains(NonAccessModifiers.ABSTRACT)) {
-                    boolean isStatic = method.getModifiers().contains(NonAccessModifiers.STATIC);
+            for (MethodDecl method : apiType.getMethods()) {
+                if (!method.getModifiers().contains(Modifier.ABSTRACT)) {
+                    boolean isStatic = method.getModifiers().contains(Modifier.STATIC);
                     usage = new Usage(
                             projectId,
                             projectType,
-                            method.getFullyQualifiedName(),
+                            method.getQualifiedName(),
                             SymbolKind.SYMBOL_KIND_METHOD,
                             isStatic ? SymbolUse.SYMBOL_USE_STATIC_INVOCATION : SymbolUse.SYMBOL_USE_INVOCATION,
-                            method.getPosition(),
+                            method.getLocation(),
                             projectLocation
                     );
                     if (!usageModelCollection.contains(usage)) {
@@ -122,14 +124,14 @@ public class SUMGenerator {
                     }
                 }
 
-                if (!method.getModifiers().contains(NonAccessModifiers.FINAL)) {
+                if (!method.getModifiers().contains(Modifier.FINAL)) {
                     usage = new Usage(
                             projectId,
                             projectType,
-                            method.getFullyQualifiedName(),
+                            method.getQualifiedName(),
                             SymbolKind.SYMBOL_KIND_METHOD,
                             SymbolUse.SYMBOL_USE_OVERRIDING,
-                            method.getPosition(),
+                            method.getLocation(),
                             projectLocation
                     );
                     if (!usageModelCollection.contains(usage)) {
@@ -140,10 +142,10 @@ public class SUMGenerator {
                     usage = new Usage(
                             projectId,
                             projectType,
-                            method.getFullyQualifiedName(),
+                            method.getQualifiedName(),
                             SymbolKind.SYMBOL_KIND_METHOD,
                             SymbolUse.SYMBOL_USE_VIRTUAL_INVOCATION,
-                            method.getPosition(),
+                            method.getLocation(),
                             projectLocation
                     );
                     if (!usageModelCollection.contains(usage)) {
@@ -152,28 +154,28 @@ public class SUMGenerator {
                 }
             }
 
-            for (FieldDeclaration field : apiType.getFields()) {
+            for (FieldDecl field : apiType.getFields()) {
                 usage = new Usage(
                         projectId,
                         projectType,
-                        field.getFullyQualifiedName(),
+                        field.getQualifiedName(),
                         SymbolKind.SYMBOL_KIND_FIELD,
                         SymbolUse.SYMBOL_USE_INSTANCE_FIELD_READ,
-                        field.getPosition(),
+                        field.getLocation(),
                         projectLocation
                 );
                 if (!usageModelCollection.contains(usage)) {
                     usageModelCollection.add(usage);
                 }
 
-                if (!field.getModifiers().contains(NonAccessModifiers.FINAL)) {
+                if (!field.getModifiers().contains(Modifier.FINAL)) {
                     usage = new Usage(
                             projectId,
                             projectType,
-                            field.getFullyQualifiedName(),
+                            field.getQualifiedName(),
                             SymbolKind.SYMBOL_KIND_FIELD,
                             SymbolUse.SYMBOL_USE_INSTANCE_FIELD_WRITE,
-                            field.getPosition(),
+                            field.getLocation(),
                             projectLocation
                     );
                     if (!usageModelCollection.contains(usage)) {

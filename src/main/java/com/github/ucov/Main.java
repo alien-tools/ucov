@@ -1,7 +1,7 @@
 package com.github.ucov;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.maracas.roseau.model.API;
+import com.github.maracas.roseau.api.model.API;
 import com.github.ucov.models.Project;
 import com.github.ucov.models.ProjectType;
 import com.github.ucov.models.Usage;

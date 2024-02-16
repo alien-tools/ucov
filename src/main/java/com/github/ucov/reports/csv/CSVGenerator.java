@@ -2,7 +2,7 @@ package com.github.ucov.reports.csv;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.github.maracas.roseau.model.API;
+import com.github.maracas.roseau.api.model.API;
 import com.github.ucov.Main;
 import com.github.ucov.models.Usage;
 
@@ -25,16 +25,9 @@ public class CSVGenerator {
     // Initialize usage report CSV file (empty, new file, header)
     public static void InitializeUsageReport(Path usageReportOutputPath) throws IOException {
         Files.deleteIfExists(usageReportOutputPath);
-        //String SEPARATOR = "|";
-        /*String headerStringCsv = "projectId" + SEPARATOR +
-                "projectType" + SEPARATOR +
-                "projectLocation" + SEPARATOR +
-                "usagePosition" + SEPARATOR +
-                "usageEndPosition" + SEPARATOR +
-                "usageFullyQualifiedName" + SEPARATOR +
-                "usageKind" + SEPARATOR +
-                "usageType";*/
-        //Files.write(usageReportOutputPath, Arrays.stream(new String[]{headerStringCsv}).toList(), StandardOpenOption.CREATE);
+        /*String SEPARATOR = "|";
+        String headerStringCsv = STR."projectId\{SEPARATOR}projectType\{SEPARATOR}projectLocation\{SEPARATOR}usagePosition\{SEPARATOR}usageEndPosition\{SEPARATOR}usageFullyQualifiedName\{SEPARATOR}usageKind\{SEPARATOR}usageType";
+        Files.write(usageReportOutputPath, Arrays.stream(new String[]{headerStringCsv}).toList(), StandardOpenOption.CREATE);*/
     }
 
     public static void writeApiModelReport(Path apiReportOutputPath, API mainProjectApiModel) {

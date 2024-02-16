@@ -1,6 +1,6 @@
 package com.github.ucov.reports.html;
 
-import com.github.maracas.roseau.model.API;
+import com.github.maracas.roseau.api.model.API;
 import com.github.ucov.models.Usage;
 
 import java.util.Collection;
