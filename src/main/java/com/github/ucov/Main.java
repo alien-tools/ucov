@@ -1,6 +1,7 @@
 package com.github.ucov;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.maracas.roseau.api.SpoonAPIFactory;
 import com.github.maracas.roseau.api.model.API;
 import com.github.ucov.models.Project;
 import com.github.ucov.models.ProjectType;
@@ -81,8 +82,8 @@ public class Main {
         API mainProjectApiModel;
 
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            mainProjectApiModel = mapper.readerFor(API.class).readValue(apiReportOutputPath.toFile());
+            SpoonAPIFactory factory = new SpoonAPIFactory();
+            mainProjectApiModel = API.fromJson(apiReportOutputPath, factory);
         } catch (IOException e) {
             UCOV_LOGGER.info("An error occurred while reading the report.");
             UCOV_LOGGER.info(e.getMessage());

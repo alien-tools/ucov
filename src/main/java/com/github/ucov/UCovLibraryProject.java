@@ -61,7 +61,7 @@ public class UCovLibraryProject {
             Main.UCOV_LOGGER.info("Fetching API models...");
 
             // API model for libraries
-            cachedAPI = new SpoonAPIExtractor(getExternalReferencesModel()).extractAPI();
+            cachedAPI = new SpoonAPIExtractor().extractAPI(getExternalReferencesModel());
         }
 
         return cachedAPI;

@@ -11,8 +11,13 @@ public record Usage(String projectId, String projectType, String fullyQualifiedN
 
     public String toCSVRowString() {
         String SEPARATOR = "|";
+        String filePath = "";
 
-        return STR."\{projectId}\{SEPARATOR}\{projectType}\{SEPARATOR}\{projectLocation.toAbsolutePath().toString().replace('\\', '/')}\{SEPARATOR}\{usagePosition.file().toString().toLowerCase().replace(projectLocation.toAbsolutePath().toString().toLowerCase(), "").replace('\\', '/')}(\{usagePosition.line()})\{SEPARATOR}\{fullyQualifiedName}\{SEPARATOR}\{usageKind}\{SEPARATOR}\{usageType}";
+        if (usagePosition.file() != null) {
+            filePath = usagePosition.file().toString().toLowerCase().replace(projectLocation.toAbsolutePath().toString().toLowerCase(), "").replace('\\', '/');
+        }
+
+        return STR."\{projectId}\{SEPARATOR}\{projectType}\{SEPARATOR}\{projectLocation.toAbsolutePath().toString().replace('\\', '/')}\{SEPARATOR}\{filePath}(\{usagePosition.line()})\{SEPARATOR}\{fullyQualifiedName}\{SEPARATOR}\{usageKind}\{SEPARATOR}\{usageType}";
     }
 
     @Override

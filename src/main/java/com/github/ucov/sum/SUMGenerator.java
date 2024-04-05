@@ -17,7 +17,7 @@ public class SUMGenerator {
 
         ArrayList<Usage> usageModelCollection = new ArrayList<>();
 
-        for (TypeDecl apiType : mainProjectApiModel.getExportedTypes()) {
+        for (TypeDecl apiType : mainProjectApiModel.getExportedTypes().toList()) {
             Usage usage = new Usage(
                     projectId,
                     projectType,
@@ -107,7 +107,7 @@ public class SUMGenerator {
                 }
             }
 
-            for (MethodDecl method : apiType.getMethods()) {
+            for (MethodDecl method : apiType.getAllMethods().toList()) {
                 if (!method.getModifiers().contains(Modifier.ABSTRACT)) {
                     boolean isStatic = method.getModifiers().contains(Modifier.STATIC);
                     usage = new Usage(
@@ -154,7 +154,7 @@ public class SUMGenerator {
                 }
             }
 
-            for (FieldDecl field : apiType.getFields()) {
+            for (FieldDecl field : apiType.getAllFields().toList()) {
                 usage = new Usage(
                         projectId,
                         projectType,

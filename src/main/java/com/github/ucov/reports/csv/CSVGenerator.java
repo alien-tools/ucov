@@ -17,8 +17,9 @@ public class CSVGenerator {
         Main.UCOV_LOGGER.info("Writing usage report CSV...");
         try {
             Files.write(usageReportOutputPath, usageModels.stream().map(Usage::toCSVRowString).sorted().toList(), StandardOpenOption.CREATE);
-        } catch (IOException ignore) {
+        } catch (IOException e) {
             Main.UCOV_LOGGER.info("An error occurred while writing the report.");
+            Main.UCOV_LOGGER.info(e.getMessage());
         }
     }
 
@@ -34,11 +35,10 @@ public class CSVGenerator {
         Main.UCOV_LOGGER.info("Writing API report JSON...");
 
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.writeValue(apiReportOutputPath.toFile(), mainProjectApiModel);
-        } catch (IOException ignore) {
+            mainProjectApiModel.writeJson(apiReportOutputPath);
+        } catch (IOException e) {
             Main.UCOV_LOGGER.info("An error occurred while writing the report.");
+            Main.UCOV_LOGGER.info(e.getMessage());
         }
     }
 }
