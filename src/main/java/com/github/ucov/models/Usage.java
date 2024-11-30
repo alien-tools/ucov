@@ -13,11 +13,15 @@ public record Usage(String projectId, String projectType, String fullyQualifiedN
         String SEPARATOR = "|";
         String filePath = "";
 
+        String projectLocationStr = projectLocation.toAbsolutePath().toString();
+
         if (usagePosition.file() != null) {
-            filePath = usagePosition.file().toString().toLowerCase().replace(projectLocation.toAbsolutePath().toString().toLowerCase(), "").replace('\\', '/');
+            String usagePositionStr = usagePosition.file().toString();
+            filePath = usagePositionStr.replaceAll("(?i)" + projectLocationStr, "").replace('\\', '/');
         }
 
-        return STR."\{projectId}\{SEPARATOR}\{projectType}\{SEPARATOR}\{projectLocation.toAbsolutePath().toString().replace('\\', '/')}\{SEPARATOR}\{filePath}(\{usagePosition.line()})\{SEPARATOR}\{fullyQualifiedName}\{SEPARATOR}\{usageKind}\{SEPARATOR}\{usageType}";
+
+        return STR."\{projectId}\{SEPARATOR}\{projectType}\{SEPARATOR}\{projectLocationStr.replace('\\', '/')}\{SEPARATOR}\{filePath}(\{usagePosition.line()})\{SEPARATOR}\{fullyQualifiedName}\{SEPARATOR}\{usageKind}\{SEPARATOR}\{usageType}";
     }
 
     @Override

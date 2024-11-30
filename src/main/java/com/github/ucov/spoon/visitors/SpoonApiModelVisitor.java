@@ -1,6 +1,7 @@
 package com.github.ucov.spoon.visitors;
 
 import com.github.maracas.roseau.api.model.*;
+import com.github.ucov.RoseauFQNGenertor;
 import com.github.ucov.models.SymbolKind;
 import com.github.ucov.models.SymbolUse;
 import com.github.ucov.models.Usage;
@@ -62,16 +63,16 @@ public class SpoonApiModelVisitor extends CtScanner {
         if (executable.getExecutableDeclaration() instanceof CtMethod<?> ctMethod) {
             topDefinitions = ctMethod.getTopDefinitions();
         }
-
+        
         for (TypeDecl apiType : api.getExportedTypes().toList()) {
             for (MethodDecl method : apiType.getAllMethods().toList()) {
-                if (method.getQualifiedName().equals(fullyQualifiedName)) {
+                if (RoseauFQNGenertor.getFullyQualifiedNameFromRoseauMethodDecl(method).equals(fullyQualifiedName)) {
                     if (!method.getModifiers().contains(Modifier.ABSTRACT)) {
                         boolean isStatic = method.getModifiers().contains(Modifier.STATIC);
                         Usage usageModel = new Usage(
                                 projectId,
                                 projectType,
-                                method.getQualifiedName(),
+                                RoseauFQNGenertor.getFullyQualifiedNameFromRoseauMethodDecl(method),
                                 SymbolKind.SYMBOL_KIND_METHOD,
                                 isStatic ? SymbolUse.SYMBOL_USE_STATIC_INVOCATION : SymbolUse.SYMBOL_USE_INVOCATION,
                                 position,
@@ -84,7 +85,7 @@ public class SpoonApiModelVisitor extends CtScanner {
                         Usage usageModel = new Usage(
                                 projectId,
                                 projectType,
-                                method.getQualifiedName(),
+                                RoseauFQNGenertor.getFullyQualifiedNameFromRoseauMethodDecl(method),
                                 SymbolKind.SYMBOL_KIND_METHOD,
                                 SymbolUse.SYMBOL_USE_VIRTUAL_INVOCATION,
                                 position,
@@ -100,11 +101,12 @@ public class SpoonApiModelVisitor extends CtScanner {
                     for (CtMethod<?> topMethod : topDefinitions) {
                         CtType<?> declaringType = topMethod.getDeclaringType();
                         String mFQN = STR."\{declaringType.getQualifiedName()}.\{topMethod.getSignature()}";
-                        if (method.getQualifiedName().equals(mFQN)) {
+
+                        if (RoseauFQNGenertor.getFullyQualifiedNameFromRoseauMethodDecl(method).equals(mFQN)) {
                             Usage usageModel = new Usage(
                                     projectId,
                                     projectType,
-                                    method.getQualifiedName(),
+                                    RoseauFQNGenertor.getFullyQualifiedNameFromRoseauMethodDecl(method),
                                     SymbolKind.SYMBOL_KIND_METHOD,
                                     SymbolUse.SYMBOL_USE_VIRTUAL_INVOCATION,
                                     position,
@@ -202,7 +204,7 @@ public class SpoonApiModelVisitor extends CtScanner {
 
         for (ClassDecl apiType : api.getExportedClasses().toList()) {
             for (ConstructorDecl constructor : apiType.getConstructors()) {
-                if (constructor.getQualifiedName().equals(fullyQualifiedName)) {
+                if (RoseauFQNGenertor.getFullyQualifiedNameFromRoseauConstructorDecl(constructor).equals(fullyQualifiedName)) {
                     Usage usageModel = new Usage(
                             projectId,
                             projectType,
@@ -370,7 +372,8 @@ public class SpoonApiModelVisitor extends CtScanner {
             for (MethodDecl m : apiType.getAllMethods().toList()) {
                 for (CtMethod<?> topMethod : topDefinitions) {
                     String fullyQualifiedName = SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(topMethod);
-                    if (m.getQualifiedName().equals(fullyQualifiedName)) {
+
+                    if (RoseauFQNGenertor.getFullyQualifiedNameFromRoseauMethodDecl(m).equals(fullyQualifiedName)) {
                         Usage usageModel = new Usage(
                                 projectId,
                                 projectType,
@@ -428,7 +431,7 @@ public class SpoonApiModelVisitor extends CtScanner {
         String methodFqn = SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(overriddenMethod);
         for (TypeDecl apiType : api.getExportedTypes().toList()) {
             for (MethodDecl method : apiType.getAllMethods().toList()) {
-                if (method.getQualifiedName().equals(methodFqn)) {
+                if (RoseauFQNGenertor.getFullyQualifiedNameFromRoseauMethodDecl(method).equals(methodFqn)) {
                     Usage usageModel = new Usage(
                             projectId,
                             projectType,
@@ -453,7 +456,7 @@ public class SpoonApiModelVisitor extends CtScanner {
                 for (CtMethod<?> topMethod : topDefinitions) {
                     CtType<?> topMethodDeclaringType = topMethod.getDeclaringType();
                     String fullyQualifiedName = SpoonFullyQualifiedNameExtractor.getFullyQualifiedName(topMethod);
-                    if (m.getQualifiedName().equals(fullyQualifiedName)) {
+                    if (RoseauFQNGenertor.getFullyQualifiedNameFromRoseauMethodDecl(m).equals(fullyQualifiedName)) {
                         Usage usageModel = new Usage(
                                 projectId,
                                 projectType,

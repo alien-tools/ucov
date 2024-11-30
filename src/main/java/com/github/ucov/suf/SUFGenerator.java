@@ -24,10 +24,12 @@ public class SUFGenerator {
         String projectType = clientProject.type().name();
 
         EnumSet<CodeType> enumSet = switch (clientProject.type()) {
-            case MAIN -> EnumSet.of(CodeType.MAIN);
-            case TEST -> EnumSet.of(CodeType.TEST);
-            case SAMPLE -> EnumSet.of(CodeType.SAMPLE);
-            case CLIENT -> CodeType.ALL;
+            case LIBRARY_MAIN -> EnumSet.of(CodeType.MAIN);
+            case LIBRARY_TEST -> EnumSet.of(CodeType.TEST);
+            case LIBRARY_SAMPLE -> EnumSet.of(CodeType.SAMPLE);
+            case CLIENT_ALL -> CodeType.ALL;
+            case CLIENT_MAIN -> EnumSet.of(CodeType.MAIN);
+            case CLIENT_TEST -> EnumSet.of(CodeType.TEST);
         };
 
         // Clients, Tests, Samples...
@@ -41,7 +43,7 @@ public class SUFGenerator {
         ArrayList<Usage> usageModels = new ArrayList<>();
 
         // Add project uses if provided
-        List<Project> clientProjects = projects.stream().filter(t -> t.type() != ProjectType.MAIN).toList();
+        List<Project> clientProjects = projects.stream().filter(t -> t.type() != ProjectType.LIBRARY_MAIN).toList();
         for (Project project : clientProjects) {
             for (Usage p : Analyse(mainProjectApiModel, externalProject, project)) {
                 if (!usageModels.contains(p)) {

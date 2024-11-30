@@ -122,7 +122,7 @@ public class Main {
         ArrayList<Project> projects = new ArrayList<>(Arrays.stream(projectArguments).map(Main::parseProjectCommandLineOption).toList());
 
         // Retrieve the main project, if not provided, fail.
-        Optional<Project> optionalMainProject = projects.stream().filter(t -> t.type() == ProjectType.MAIN).findFirst();
+        Optional<Project> optionalMainProject = projects.stream().filter(t -> t.type() == ProjectType.LIBRARY_MAIN).findFirst();
         if (optionalMainProject.isEmpty()) {
             throw new Exception("Main project was not specified!");
         }
@@ -157,7 +157,7 @@ public class Main {
         }
 
         // If projects other than main were specified, generate a SUF.
-        if (projects.stream().anyMatch(t -> t.type() != ProjectType.MAIN)) {
+        if (projects.stream().anyMatch(t -> t.type() != ProjectType.LIBRARY_MAIN)) {
             CSVGenerator.InitializeUsageReport(usageReportOutputPath);
             ArrayList<Usage> usageModels = SUFGenerator.getSUF(mainProjectApiModel, libraryProject, projects);
             CSVGenerator.writeApiUsageReport(usageReportOutputPath, usageModels);

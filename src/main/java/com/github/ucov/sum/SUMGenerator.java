@@ -1,6 +1,7 @@
 package com.github.ucov.sum;
 
 import com.github.maracas.roseau.api.model.*;
+import com.github.ucov.RoseauFQNGenertor;
 import com.github.ucov.models.Project;
 import com.github.ucov.models.SymbolKind;
 import com.github.ucov.models.SymbolUse;
@@ -80,7 +81,7 @@ public class SUMGenerator {
                     usage = new Usage(
                             projectId,
                             projectType,
-                            constructor.getQualifiedName(),
+                            RoseauFQNGenertor.getFullyQualifiedNameFromRoseauConstructorDecl(constructor),
                             SymbolKind.SYMBOL_KIND_CONSTRUCTOR,
                             SymbolUse.SYMBOL_USE_INVOCATION,
                             constructor.getLocation(),
@@ -113,7 +114,7 @@ public class SUMGenerator {
                     usage = new Usage(
                             projectId,
                             projectType,
-                            method.getQualifiedName(),
+                            RoseauFQNGenertor.getFullyQualifiedNameFromRoseauMethodDecl(method),
                             SymbolKind.SYMBOL_KIND_METHOD,
                             isStatic ? SymbolUse.SYMBOL_USE_STATIC_INVOCATION : SymbolUse.SYMBOL_USE_INVOCATION,
                             method.getLocation(),
@@ -128,7 +129,7 @@ public class SUMGenerator {
                     usage = new Usage(
                             projectId,
                             projectType,
-                            method.getQualifiedName(),
+                            RoseauFQNGenertor.getFullyQualifiedNameFromRoseauMethodDecl(method),
                             SymbolKind.SYMBOL_KIND_METHOD,
                             SymbolUse.SYMBOL_USE_OVERRIDING,
                             method.getLocation(),
@@ -142,7 +143,7 @@ public class SUMGenerator {
                     usage = new Usage(
                             projectId,
                             projectType,
-                            method.getQualifiedName(),
+                            RoseauFQNGenertor.getFullyQualifiedNameFromRoseauMethodDecl(method),
                             SymbolKind.SYMBOL_KIND_METHOD,
                             SymbolUse.SYMBOL_USE_VIRTUAL_INVOCATION,
                             method.getLocation(),
