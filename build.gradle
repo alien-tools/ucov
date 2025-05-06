@@ -11,18 +11,12 @@ compileJava {
     options.encoding = 'UTF-8'
     sourceCompatibility = '23'
     targetCompatibility = '23'
-    options.compilerArgs += ["--enable-preview"]
 }
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
     sourceCompatibility = '23'
     targetCompatibility = '23'
-    options.compilerArgs += ["--enable-preview"]
-}
-
-test {
-    jvmArgs '--enable-preview'
 }
 
 repositories {
@@ -97,7 +91,6 @@ run {
 runShadow {
     jvmArgs = [
             "-XX:InitialHeapSize=2G",
-            "-XX:MaxHeapSize=2G",
-            "--enable-preview"
+            "-XX:MaxHeapSize=2G"
     ]
 }
