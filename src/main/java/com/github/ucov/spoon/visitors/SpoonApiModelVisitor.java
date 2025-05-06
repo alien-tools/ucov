@@ -100,7 +100,7 @@ public class SpoonApiModelVisitor extends CtScanner {
                 if (topDefinitions != null) {
                     for (CtMethod<?> topMethod : topDefinitions) {
                         CtType<?> declaringType = topMethod.getDeclaringType();
-                        String mFQN = STR."\{declaringType.getQualifiedName()}.\{topMethod.getSignature()}";
+                        String mFQN = declaringType.getQualifiedName() + "." + topMethod.getSignature();
 
                         if (RoseauFQNGenertor.getFullyQualifiedNameFromRoseauMethodDecl(method).equals(mFQN)) {
                             Usage usageModel = new Usage(

@@ -40,7 +40,7 @@ public class SpoonLauncherUtilities {
 
         File mavenProjectFile = new File(mavenProject);
         if (!mavenProjectFile.exists()) {
-            throw new SpoonException(STR."\{mavenProject} does not exist.");
+            throw new SpoonException(mavenProject + " does not exist.");
         }
 
         Pattern profileFilter = Pattern.compile("^$");
@@ -55,7 +55,7 @@ public class SpoonLauncherUtilities {
         if (spoon.MavenLauncher.SOURCE_TYPE.APP_SOURCE == sourceType || spoon.MavenLauncher.SOURCE_TYPE.ALL_SOURCE == sourceType) {
             List<File> sourceDirectories = model.getSourceDirectories();
             for (File sourceDirectory : sourceDirectories) {
-                Main.UCOV_LOGGER.info(STR."Detected Project MAIN Source Directory at: \{sourceDirectory}");
+                Main.UCOV_LOGGER.info("Detected Project MAIN Source Directory at: " + sourceDirectory);
                 paths.add(sourceDirectory.toPath());
             }
         }
@@ -64,7 +64,7 @@ public class SpoonLauncherUtilities {
         if (spoon.MavenLauncher.SOURCE_TYPE.TEST_SOURCE == sourceType || spoon.MavenLauncher.SOURCE_TYPE.ALL_SOURCE == sourceType) {
             List<File> testSourceDirectories = model.getTestDirectories();
             for (File sourceDirectory : testSourceDirectories) {
-                Main.UCOV_LOGGER.info(STR."Detected Project TEST Source Directory at: \{sourceDirectory}");
+                Main.UCOV_LOGGER.info("Detected Project TEST Source Directory at: " + sourceDirectory);
                 paths.add(sourceDirectory.toPath());
             }
         }
@@ -77,7 +77,7 @@ public class SpoonLauncherUtilities {
 
         File mavenProjectFile = new File(mavenProject);
         if (!mavenProjectFile.exists()) {
-            throw new SpoonException(STR."\{mavenProject} does not exist.");
+            throw new SpoonException(mavenProject + " does not exist.");
         }
 
         Pattern profileFilter = Pattern.compile("^$");
@@ -181,7 +181,7 @@ public class SpoonLauncherUtilities {
     public static ArrayList<Path> getProjectPaths(Path projectLocation, EnumSet<CodeType> codeTypes) {
         ArrayList<Path> paths = new ArrayList<>();
 
-        Main.UCOV_LOGGER.info(STR."Trying to detect source directories for project: \{projectLocation} with types: \{codeTypes}");
+        Main.UCOV_LOGGER.info("Trying to detect source directories for project: " + projectLocation + " with types: " + codeTypes);
 
         if (codeTypes.contains(CodeType.MAIN) || codeTypes.contains(CodeType.TEST)) {
             try {
@@ -196,7 +196,7 @@ public class SpoonLauncherUtilities {
                 if (codeTypes.contains(CodeType.MAIN)) {
                     Path mainPath = getPossibleMainPath(projectLocation);
                     if (mainPath != null) {
-                        Main.UCOV_LOGGER.info(STR."Detected Project MAIN Source Directory at: \{mainPath}");
+                        Main.UCOV_LOGGER.info("Detected Project MAIN Source Directory at: " + mainPath);
                         if (!paths.contains(mainPath)) {
                             paths.add(mainPath);
                         }
@@ -206,7 +206,7 @@ public class SpoonLauncherUtilities {
                 if (codeTypes.contains(CodeType.TEST)) {
                     Path testPath = getPossibleTestPath(projectLocation);
                     if (testPath != null) {
-                        Main.UCOV_LOGGER.info(STR."Detected Project TEST Source Directory at: \{testPath}");
+                        Main.UCOV_LOGGER.info("Detected Project TEST Source Directory at: " + testPath);
                         if (!paths.contains(testPath)) {
                             paths.add(testPath);
                         }
@@ -218,7 +218,7 @@ public class SpoonLauncherUtilities {
         if (codeTypes.contains(CodeType.SAMPLE)) {
             Path samplePath = getPossibleSamplePath(projectLocation);
             if (samplePath != null) {
-                Main.UCOV_LOGGER.info(STR."Detected Project SAMPLE Source Directory at: \{samplePath}");
+                Main.UCOV_LOGGER.info("Detected Project SAMPLE Source Directory at: " + samplePath);
                 if (!paths.contains(samplePath)) {
                     paths.add(samplePath);
                 }
@@ -232,7 +232,7 @@ public class SpoonLauncherUtilities {
             }
         }
 
-        Main.UCOV_LOGGER.info(STR."Finished detecting source directories for project: \{projectLocation}");
+        Main.UCOV_LOGGER.info("Finished detecting source directories for project: " + projectLocation);
 
         return paths;
     }

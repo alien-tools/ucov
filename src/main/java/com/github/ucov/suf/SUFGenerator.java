@@ -16,7 +16,7 @@ import java.util.List;
 
 public class SUFGenerator {
     private static List<Usage> Analyse(API mainProjectApiModel, UCovLibraryProject uCovLibraryProject, Project clientProject) {
-        Main.UCOV_LOGGER.info(STR."Processing \{clientProject}");
+        Main.UCOV_LOGGER.info("Processing " + clientProject);
 
         UCovLibraryClientsProject internalProject = new UCovLibraryClientsProject();
         Path projectLocation = clientProject.location();

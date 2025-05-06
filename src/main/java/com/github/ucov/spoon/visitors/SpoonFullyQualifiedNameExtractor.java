@@ -14,7 +14,7 @@ import spoon.reflect.reference.CtTypeReference;
 
 public class SpoonFullyQualifiedNameExtractor {
     public static String getFullyQualifiedName(CtField<?> ctField) {
-        return STR."\{getFullyQualifiedName(ctField.getDeclaringType())}.\{ctField.getSimpleName()}";
+        return getFullyQualifiedName(ctField.getDeclaringType()) + "." + ctField.getSimpleName();
     }
 
     public static String getFullyQualifiedName(CtInvocation<?> ctInvocation) {

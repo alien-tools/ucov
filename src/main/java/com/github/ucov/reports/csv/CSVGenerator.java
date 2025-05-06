@@ -27,7 +27,7 @@ public class CSVGenerator {
     public static void InitializeUsageReport(Path usageReportOutputPath) throws IOException {
         Files.deleteIfExists(usageReportOutputPath);
         /*String SEPARATOR = "|";
-        String headerStringCsv = STR."projectId\{SEPARATOR}projectType\{SEPARATOR}projectLocation\{SEPARATOR}usagePosition\{SEPARATOR}usageEndPosition\{SEPARATOR}usageFullyQualifiedName\{SEPARATOR}usageKind\{SEPARATOR}usageType";
+        String headerStringCsv = "projectId" + SEPARATOR + "projectType" + SEPARATOR + "projectLocation" + SEPARATOR + "usagePosition" + SEPARATOR + "usageEndPosition" + SEPARATOR + "usageFullyQualifiedName" + SEPARATOR + "usageKind" + SEPARATOR + "usageType";
         Files.write(usageReportOutputPath, Arrays.stream(new String[]{headerStringCsv}).toList(), StandardOpenOption.CREATE);*/
     }
 

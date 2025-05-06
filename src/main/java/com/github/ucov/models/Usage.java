@@ -21,7 +21,7 @@ public record Usage(String projectId, String projectType, String fullyQualifiedN
         }
 
 
-        return STR."\{projectId}\{SEPARATOR}\{projectType}\{SEPARATOR}\{projectLocationStr.replace('\\', '/')}\{SEPARATOR}\{filePath}(\{usagePosition.line()})\{SEPARATOR}\{fullyQualifiedName}\{SEPARATOR}\{usageKind}\{SEPARATOR}\{usageType}";
+        return projectId + SEPARATOR + projectType + SEPARATOR + projectLocationStr.replace('\\', '/') + SEPARATOR + filePath + "(" + usagePosition.line() + ")" + SEPARATOR + fullyQualifiedName + SEPARATOR + usageKind + SEPARATOR + usageType;
     }
 
     @Override
